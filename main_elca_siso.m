@@ -172,7 +172,7 @@ e_r = ref_eta - y_r;      % tracking error
 %%                 Step 2 : PID Filter ( assigning zeros )                     
 % *********************************************************************** %
 % %  The assigned zeros 
-PID_roots=[-1e5 -1e5];
+PID_roots=[-1e3 -1e3];
 pp = p;
 while pp>1
     PID_roots = [PID_roots;PID_roots];
@@ -184,7 +184,7 @@ for ii = 1:p
     P(ii,ii)=PID_roots(ii,i)*PID_roots(ii,i+1);
 end
 
-cof = 1e-3;
+cof = 1e-2;
 
 Kd = cof*eye(p); % Derivative   gain (small value)
 Ki = P*Kd;
@@ -226,7 +226,7 @@ Ro_aug = rank(Mo_aug);                 % Check whether the plant is observable  
 % ~~~ Weighting matrices {Qc,Rc} , high ratio of Qc to Rc
 
 Qc = eye(p);
-Rc = 1e-1*eye(m); % -1
+Rc = 1e-4*eye(m); % -1
 
 R_bar = Rc + D_aug'*Qc*D_aug;
 N     = C_aug'*Qc*D_aug;
@@ -274,7 +274,7 @@ Ro_obs = rank(obsv(A, C_tilde));         % Check whether the plant is observable
 
 % %  The assigned zeros
 
-PID_roots=[-1e5 -1e5];
+PID_roots=[-1e2 -1e2];
 pp = p;
 while pp>1
     PID_roots = [PID_roots;PID_roots];
@@ -330,7 +330,7 @@ Ced=inv(Re)*Be_aug'*inv((Ae_aug-Be_aug*Ke)')*Pe_aug; % Ced* d = Ce
 
 % UIE
 h = 0; % shift the y-axis
-Qod = 1e6*eye(n);
+Qod = 1e4*eye(n);
 Rod = 1e0*eye(p);
 % H: shift the y-axis
 Lt = lqr((A-De*Ke1)'+h*eye(n), C_tilde', Qod, Rod)'; % regulator
@@ -406,16 +406,16 @@ axis([0 T_stop -40 40])
 end
 xlabel('\fontsize{10} Time ( sec. )')
 
-% figure % r - y
-% signal = ref_c - yc';
-% size_fig = min(size(signal));
-% for i = 1:size_fig
-% subplot(size_fig*100+10+i)
-% plot(ts_c, signal(i,:), 'b-', 'LineWidth', 1.5)
-% ylabel(['\fontsize{10} r_{c' num2str(i) '} - y_{c' num2str(i) '}'])
-% legend(['\fontsize{10} r_{c' num2str(i) '} -  y_{c' num2str(i) '}'],'Location','NorthWest','Orientation','Horizontal')
-% end
-% xlabel('\fontsize{10} Time ( sec. )')
+figure % r - y
+signal = ref_c - yc';
+size_fig = min(size(signal));
+for i = 1:size_fig
+subplot(size_fig*100+10+i)
+plot(ts_c, signal(i,:), 'b-', 'LineWidth', 1.5)
+ylabel(['\fontsize{10} r_{c' num2str(i) '} - y_{c' num2str(i) '}'])
+legend(['\fontsize{10} r_{c' num2str(i) '} -  y_{c' num2str(i) '}'],'Location','NorthWest','Orientation','Horizontal')
+end
+xlabel('\fontsize{10} Time ( sec. )')
 
 figure % de
 signal = de;
